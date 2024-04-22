@@ -26,12 +26,22 @@ public class Stats : MonoBehaviour
         if(Hunger > 0)
             Hunger -= 1; 
     }
+    public void IncreaseHunger() { 
+
+        if(Hunger < 10)
+            Hunger += 1; 
+    }
 
     public int GetThirsty() { return Thirsty; }
     public void DecreaseThirsty()
     {
         if (Thirsty > 0)
             Thirsty -= 1;
+    }
+    public void IncreaseThirsty() { 
+
+        if(Thirsty < 10)
+            Thirsty += 1; 
     }
     public int Getsleep() { return sleep; }
     public float GetFriendship() { return Friendship; }

@@ -13,8 +13,22 @@ public class TimeSystem : MonoBehaviour
         DateText = PlayerPrefs.GetString("Date", "No Date");
         if(DateText == "No Date"){
 
-            DateText = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
+            StoreCurrentTime();
         }
+        else{
+
+            int[] ConvertedDate = ConvertStringToDate(DateText);
+            for(int i = 0; i < 3; i++){
+            
+                Date[i] = ConvertedDate[i];
+            }
+            for(int i = 0; i < 2; i++){
+            
+                Time[i] = ConvertedDate[i+3];
+            }
+        }
+        //delete later
+        StoreCurrentTime();
     }
 
     public int[] ConvertStringToDate(string time){

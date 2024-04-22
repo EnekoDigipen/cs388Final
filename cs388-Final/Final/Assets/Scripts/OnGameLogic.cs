@@ -43,10 +43,26 @@ public class OnGameLogic : MonoBehaviour
         if(Clock.TimeEllapsed() > 5){
 
             int Iterations = (int)(Clock.TimeEllapsed()/5);
+
             for(int i = 0; i < Iterations; i++){
+                
+                int OptionsReduce = Random.Range(0,2);
+                if(OptionsReduce == 0){
 
+                    //increase hunger
+                    StatsMRef.IncreaseHunger();
+                }
+                else if(OptionsReduce == 1){
+                    
+                    //increase thirsty
+                    StatsMRef.IncreaseThirsty();
+                }
+                else{
 
+                    StatsMRef.IncreaseHunger();
+                }
             }
+            Clock.StoreCurrentTime();
             EnableStatus();
         }
     }
@@ -126,9 +142,7 @@ public class OnGameLogic : MonoBehaviour
         if (mActive == true)
             return;
         //decrease hunger
-        //StatsMRef.DecreaseThirsty();
-        
-        Debug.Log("Delta " + Clock.TimeEllapsed());
+        StatsMRef.DecreaseThirsty();
     }
     public void TriggerAction4()
     {
