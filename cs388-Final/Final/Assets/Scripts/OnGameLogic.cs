@@ -8,6 +8,7 @@ public class OnGameLogic : MonoBehaviour
     TTS_SceneManager SceneMRef;
     Stats StatsMRef;
     Inventory InventoryRef;
+    TimeSystem Clock;
 
     //fadeout
     private GameObject FO;
@@ -24,6 +25,7 @@ public class OnGameLogic : MonoBehaviour
 
         //get references to the constant components
         SceneMRef = GameObject.FindAnyObjectByType<TTS_SceneManager>();
+        Clock = GameObject.FindAnyObjectByType<TimeSystem>();
         StatsMRef = GameObject.FindAnyObjectByType<Stats>();
         InventoryRef = GameObject.FindAnyObjectByType<Inventory>();
         
@@ -32,56 +34,62 @@ public class OnGameLogic : MonoBehaviour
         Thirsty = GameObject.Find("Thirsty").GetComponent<Renderer>();
         Sleepy = GameObject.Find("Sleepy").GetComponent<Renderer>();
         FO.SetActive(mActive);
+        EnableStatus();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Clock.TimeEllapsed() > 5){
+
+            int Iterations = (int)(Clock.TimeEllapsed()/5);
+            for(int i = 0; i < Iterations; i++){
+
+
+            }
+            EnableStatus();
+        }
+    }
+    private void EnableStatus(){
+
         if (StatsMRef.GetHunger() > 0) {
 
-            if (Hunger.enabled == false) {
+            if (Hunger.enabled == false){
 
                 Hunger.enabled = true;
             }
         }
         else{
 
-
-            if (Hunger.enabled == true) {
+            if (Hunger.enabled == true){
 
                 Hunger.enabled = false;
             }
         }
-        if (StatsMRef.GetThirsty() > 0)
-        {
+        if (StatsMRef.GetThirsty() > 0){
 
-            if (Thirsty.enabled == false)
-            {
+            if (Thirsty.enabled == false){
 
                 Thirsty.enabled = true;
             }
         }
-        else
-        {
-            if (Thirsty.enabled == true)
-            {
+        else{
+
+            if (Thirsty.enabled == true){
 
                 Thirsty.enabled = false;
             }
         }
-        if (StatsMRef.Getsleep() > 0)
-        {
+        if (StatsMRef.Getsleep() > 0){
 
-            if (Sleepy.enabled == false)
-            {
+            if (Sleepy.enabled == false){
 
                 Sleepy.enabled = true;
             }
         }
-        else
-        {
-            if (Sleepy.enabled == true)
-            {
+        else{
+
+            if (Sleepy.enabled == true){
 
                 Sleepy.enabled = false;
             }
@@ -117,11 +125,14 @@ public class OnGameLogic : MonoBehaviour
         //if sleeping, return
         if (mActive == true)
             return;
-        //generate food
-        //SpawnPrefab();
         //decrease hunger
-        StatsMRef.DecreaseThirsty();
-
+        //StatsMRef.DecreaseThirsty();
+        
+        Debug.Log("Delta " + Clock.TimeEllapsed());
+    }
+    public void TriggerAction4()
+    {
+        Clock.StoreCurrentTime();
     }
     public void ExitGame()
     {
