@@ -8,6 +8,8 @@ TagManager:
   - Canon
   - Coin
   - Breakable
+  - ForceField
+  - ball
   layers:
   - Default
   - TransparentFX

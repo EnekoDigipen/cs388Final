@@ -6,7 +6,7 @@ public class IntroSceneScript : MonoBehaviour
 {
 
     TTS_SceneManager SceneMRef;
-    int NextScene = 1;
+    int NextScene = 3;
     // Start is called before the first frame update
     void Start()
     {

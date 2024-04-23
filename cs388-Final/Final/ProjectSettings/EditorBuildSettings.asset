@@ -14,13 +14,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/002_Gameplay.unity
     guid: c89228884bc5b684fade8ad3db6e8edf
+  - enabled: 1
+    path: Assets/Scenes/003_ARGameplay.unity
+    guid: a538b2e59ec7de54981551e59e30517a
   - enabled: 0
     path: Assets/Scenes/003_Casino.unity
     guid: 1cc396666ad9c934b8d2a2c90b00def4
   - enabled: 0
     path: Assets/Scenes/004_LevelSelector.unity
     guid: dabd7f6a33ee4aa45be14cb4284f5de3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/005_Shop.unity
     guid: 3b862aaf003eedd4489bbfaff376b063
   - enabled: 0
