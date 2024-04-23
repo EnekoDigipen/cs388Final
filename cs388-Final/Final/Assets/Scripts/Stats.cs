@@ -4,97 +4,149 @@ using UnityEngine;
 
 public class Stats : MonoBehaviour
 {
-    private int Hunger = 0;
-    private int Thirsty = 0;
+    private float Friendship = 0.0f;
     private bool sleep = false;
+    private int Thirsty = 0;
+    private int Hunger = 0;
     private int Sick = 0;
 
-    private float Friendship = 0.0f;
-
-    private GameObject FB;
     // Start is called before the first frame update
-    void Start()
-    {
-        DontDestroyOnLoad(this.gameObject);        
-        FB = GameObject.Find("FrienshipBarR");
-        Friendship = 100.0f;
+    void Start(){
+
+        DontDestroyOnLoad(this.gameObject);
         ExtractStatsAppData();
     }
-
-    public int GetHunger() { return Hunger; }
-    public void DecreaseHunger() { 
-
-        if(Hunger > 0)
-            Hunger -= 1; 
-    }
-    public void IncreaseHunger() { 
-
-        if(Hunger < 9)
-            Hunger += 1; 
+       
+    //Get the hunger of the character
+    public int GetHunger() {
+        
+        return Hunger; 
     }
 
-    public int GetThirsty() { return Thirsty; }
-    public void DecreaseThirsty()
-    {
-        if (Thirsty > 0)
-            Thirsty -= 1;
+    //Get the sleep of the character
+    public bool Getsleep() {
+        
+        return sleep;
     }
-    public void IncreaseThirsty() { 
 
-        if(Thirsty < 9)
-            Thirsty += 1; 
+    //Get the thirsty of the character
+    public int GetThirsty() { 
+        
+        return Thirsty; 
     }
-    public bool Getsleep() { return sleep; }
-    public int GetSick() { return Sick; }
-    public void DecreaseSick()
-    {
+
+    //Get the sick stat of the character
+    public int GetSick() { 
+        
+        return Sick; 
+    }
+
+    //Get the friendship of the character
+    public float GetFriendship() { 
+
+        return Friendship; 
+    }
+
+    //Get the sleep of the character
+    public void Setsleep(bool NewState){
+
+        sleep = NewState;
+    }
+
+    //Character was healed
+    public void DecreaseSick(){
+
         if (Sick > 0)
             Sick -= 1;
     }
-    public void IncreaseSick() { 
 
-        if(Sick < 9)
-            Sick += 1; 
+    //Character was feed
+    public void DecreaseHunger(){
+
+        if (Hunger > 0)
+            Hunger -= 1;
     }
-    public float GetFriendship() { return Friendship; }
+
+    //Character was given water
+    public void DecreaseThirsty(){
+
+        if (Thirsty > 0)
+            Thirsty -= 1;
+    }
+
+    //Character gets sick
+    public void IncreaseSick() {
+
+        if (Sick < 9) { 
+        
+            Sick += 1;
+            Friendship += 3.0f;
+        }
+    }
+
+    //Character gets hungry
+    public void IncreaseHunger()
+    {
+
+        if (Hunger < 9) { 
+        
+            Hunger += 1;
+            Friendship += 3;
+        }
+    }
+
+    //Character gets thirsty
+    public void IncreaseThirsty()
+    {
+
+        if (Thirsty < 9) { 
+
+            Thirsty += 1;
+            Friendship += 3;
+        }
+}
+
+    //Change the frienship bar
     public void ChangeFrienship(float change) {
 
-        if (Friendship + change > 100.0f || Friendship + change < 0.0f)
-            return;
+        //change frienship
         Friendship += change;
-        float size = Friendship * 0.007f;
-        float Pos = (100.0f - Friendship)*0.035f;
-        Vector3 SVector = new Vector3(FB.transform.localScale.x, FB.transform.localScale.y, size);
-        Vector3 CVector2 = new Vector3(FB.transform.localPosition.x, -Pos, FB.transform.localPosition.z);
+        //make sure that it is between boundaries
+        if (Friendship > 100.0f || Friendship < 0.0f) {
 
-        FB.transform.localScale = SVector;
-        FB.transform.localPosition = CVector2;
+            Friendship = Mathf.Max(Friendship, 0.0f);
+            Friendship = Mathf.Min(Friendship, 100.0f);
+        }
+
+        //store the stats
+        PlayerPrefs.SetFloat("Frienship", Friendship);
     }
+
+    //Retrieve the stored data
     public void ExtractStatsAppData(){
 
         // Hunger: 0-9
         // Thirsty: 0-9
         // Sick: 0-9
-        // format: xyz where  w = sleep, x = Hunger, y = Thirsty, z = Sick
-        string StatsText = PlayerPrefs.GetString("Stats", "No Stats");
-        Debug.Log("" + StatsText);
-        if(StatsText != "No Stats"){
+        // format: wxyz where w = sleep, x = Hunger, y = Thirsty, z = Sick
+        int Stats = PlayerPrefs.GetInt("Stats", 0);
 
-            int Stats = int.Parse(StatsText);
+        //Get the stored frienship
+        Friendship = PlayerPrefs.GetFloat("Frienship", 100.0f);
+
+        if (Stats != 0){
             
+            //sleep activated
             if(Stats >= 1000){
 
                 Stats -= 1000;
                 sleep = true;
             }
+            //no hunger
             if(Stats < 100){
 
+                //no thirsty
                 if(Stats < 10){
-
-                    if(Stats == 0){
-
-                        return;
-                    }
 
                     Sick = Stats;
                     return;
@@ -111,6 +163,8 @@ public class Stats : MonoBehaviour
             return;
         }
     }
+
+    //Store the sats on AppData
     public void StoreStatsAppData(){
 
         // Hunger: 0-9
@@ -122,7 +176,8 @@ public class Stats : MonoBehaviour
 
             ValueToStore += 1000;
         }
-        PlayerPrefs.SetString("Stats", ValueToStore.ToString());
-        string ToApp = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
+
+        //store the stats
+        PlayerPrefs.SetInt("Stats", ValueToStore);
     }
 }

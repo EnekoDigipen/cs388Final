@@ -78,6 +78,19 @@ public class TimeSystem : MonoBehaviour
         System.TimeSpan diferencia =  time2 - time1;
         return diferencia.TotalMinutes;
     }
+
+    public double TimeEllapsedGiven(string Date)
+    {
+        int[] ConvertedGivenDate = ConvertStringToDate(Date);
+        System.DateTime time1 = new System.DateTime(ConvertedGivenDate[2], ConvertedGivenDate[1], ConvertedGivenDate[0], ConvertedGivenDate[3], ConvertedGivenDate[4], 0, System.DateTimeKind.Utc);
+        string Current = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
+        int[] ConvertedDate = ConvertStringToDate(Current);
+        System.DateTime time2 = new System.DateTime(ConvertedDate[2], ConvertedDate[1], ConvertedDate[0], ConvertedDate[3], ConvertedDate[4], 0, System.DateTimeKind.Utc);
+
+        System.TimeSpan diferencia = time2 - time1;
+        return diferencia.TotalMinutes;
+    }
+
     public void StoreTimeAppData(){
 
         string ToApp = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
