@@ -18,6 +18,7 @@ public class OnGameLogic : MonoBehaviour
     public Renderer Hunger;
     public Renderer Thirsty;
     public Renderer Sleepy;
+    public Renderer Sick;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +34,7 @@ public class OnGameLogic : MonoBehaviour
         Hunger = GameObject.Find("Hunger").GetComponent<Renderer>();
         Thirsty = GameObject.Find("Thirsty").GetComponent<Renderer>();
         Sleepy = GameObject.Find("Sleepy").GetComponent<Renderer>();
+        Sick = GameObject.Find("Sick").GetComponent<Renderer>();
         FO.SetActive(mActive);
         EnableStatus();
     }
@@ -40,13 +42,14 @@ public class OnGameLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Clock.TimeEllapsed() > 5){
+        if(Clock.TimeEllapsed() >= 5){
 
             int Iterations = (int)(Clock.TimeEllapsed()/5);
 
-            for(int i = 0; i < Iterations; i++){
+            for(int i = 0; i < 1; i++){
                 
-                int OptionsReduce = Random.Range(0,2);
+                int OptionsReduce = Random.Range(0,3);
+                Debug.Log("Debuff: " + OptionsReduce);
                 if(OptionsReduce == 0){
 
                     //increase hunger
@@ -59,12 +62,15 @@ public class OnGameLogic : MonoBehaviour
                 }
                 else{
 
-                    StatsMRef.IncreaseHunger();
+                    //Increase Sick
+                    StatsMRef.IncreaseSick();
                 }
             }
             Clock.StoreCurrentTime();
-            EnableStatus();
+            Clock.StoreTimeAppData();
+            StatsMRef.StoreStatsAppData();
         }
+        EnableStatus();
     }
     private void EnableStatus(){
 
@@ -96,7 +102,7 @@ public class OnGameLogic : MonoBehaviour
                 Thirsty.enabled = false;
             }
         }
-        if (StatsMRef.Getsleep() > 0){
+        if (StatsMRef.Getsleep() == true){
 
             if (Sleepy.enabled == false){
 
@@ -108,6 +114,20 @@ public class OnGameLogic : MonoBehaviour
             if (Sleepy.enabled == true){
 
                 Sleepy.enabled = false;
+            }
+        }
+        if (StatsMRef.GetSick() > 0){
+
+            if (Sick.enabled == false){
+
+                Sick.enabled = true;
+            }
+        }
+        else{
+
+            if (Sick.enabled == true){
+
+                Sick.enabled = false;
             }
         }
     }
@@ -135,6 +155,7 @@ public class OnGameLogic : MonoBehaviour
         SpawnPrefab();
         //decrease hunger
         StatsMRef.DecreaseHunger();
+        StatsMRef.StoreStatsAppData();
     }
     public void TriggerAction3()
     {
@@ -143,10 +164,16 @@ public class OnGameLogic : MonoBehaviour
             return;
         //decrease hunger
         StatsMRef.DecreaseThirsty();
+        StatsMRef.StoreStatsAppData();
     }
     public void TriggerAction4()
     {
-        Clock.StoreCurrentTime();
+        //if sleeping, return
+        if (mActive == true)
+            return;
+        //decrease sick
+        StatsMRef.DecreaseSick();
+        StatsMRef.StoreStatsAppData();
     }
     public void ExitGame()
     {
