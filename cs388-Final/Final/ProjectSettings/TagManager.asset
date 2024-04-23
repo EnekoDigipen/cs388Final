@@ -9,7 +9,7 @@ TagManager:
   - Coin
   - Breakable
   - ForceField
-  - ball
+  - heart
   layers:
   - Default
   - TransparentFX
