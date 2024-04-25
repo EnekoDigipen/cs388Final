@@ -11,6 +11,7 @@ public class OnGameLogic : MonoBehaviour
     Stats StatsMRef;
     MoveButtons[] MovingButtons;
     Cure CureOption;
+    ChangeModel Changer;
     private bool ButtonsActivated = false;
 
     //fadeout
@@ -51,6 +52,7 @@ public class OnGameLogic : MonoBehaviour
         Clock = GameObject.FindAnyObjectByType<TimeSystem>();
         MovingButtons = GameObject.FindObjectsOfType<MoveButtons>();
         CureOption = GameObject.FindAnyObjectByType<Cure>();
+        Changer = GameObject.FindAnyObjectByType<ChangeModel>();
 
         //renderers
         Thirsty = GameObject.Find("Thirsty").GetComponent<Renderer>();
@@ -319,7 +321,7 @@ public class OnGameLogic : MonoBehaviour
 
     public void TriggerAction7()
     {
-        SceneMRef.LoadNextScene(2);
+        SceneMRef.LoadNextScene(1);
     }
     public void SleepState() {
 
@@ -378,7 +380,25 @@ public class OnGameLogic : MonoBehaviour
             LastTimeFrienshipReduced = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
             PlayerPrefs.SetString("FrienshipClock", LastTimeFrienshipReduced);
         }
-        
+
+        float friendlvl = StatsMRef.GetFriendship();
+        string state = Changer.GetState();
+        if (friendlvl >= 60 && state != "Happy")
+        {
+            Changer.CreateHappy();
+            Changer.SetState("Happy");
+        }
+        else if ((friendlvl >= 30 && friendlvl < 60) && state != "Sad")
+        {
+            Changer.CreateSad();
+            Changer.SetState("Sad");
+        }
+        else if (friendlvl < 30 && state != "Ugly")
+        {
+            Changer.CreateUgly();
+            Changer.SetState("Ugly");
+        }
+
         ChangeFrienshipBar();
     }
 

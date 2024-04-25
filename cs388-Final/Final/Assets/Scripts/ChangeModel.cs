@@ -8,32 +8,38 @@ public class ChangeModel : MonoBehaviour
     public GameObject Happy;
     public GameObject Sad;
     public GameObject Ugly;
-    // REMOVE THIS LATER!!!
-    float t = 0f;
-    int idx = 0;
+    string State = "Happy";
+
     // Start is called before the first frame update
     void Start()
     {
         MonsterObj = GameObject.FindWithTag("Monster");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void CreateHappy()
     {
-        if(t > 5f)
-        {
-            Destroy(MonsterObj);
-            if (idx % 3 == 0)
-                MonsterObj = Instantiate(Happy);
-            else if (idx % 3 == 1)
-                MonsterObj = Instantiate(Sad);
-            else
-                MonsterObj = Instantiate(Ugly);
-            
-            t = 0f;
-            idx++;
-        }
-
-        t += Time.deltaTime;
+        Vector3 pos = MonsterObj.transform.position;
+        Destroy(MonsterObj);
+        MonsterObj = Instantiate(Happy);
+        MonsterObj.transform.position = pos;
     }
+
+    public void CreateSad()
+    {
+        Vector3 pos = MonsterObj.transform.position;
+        Destroy(MonsterObj);
+        MonsterObj = Instantiate(Sad);
+        MonsterObj.transform.position = pos;
+    }
+
+    public void CreateUgly()
+    {
+        Vector3 pos = MonsterObj.transform.position;
+        Destroy(MonsterObj);
+        MonsterObj = Instantiate(Ugly);
+        MonsterObj.transform.position = pos;
+    }
+
+    public string GetState() { return State; }
+    public void SetState(string new_state) { State = new_state; }
 }
