@@ -74,13 +74,14 @@ public class OnGameLogic : MonoBehaviour
         }
 
         FO.SetActive(mActive);
-        SleepState();
+        //SleepState();
         EnableStatus();
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Clock " + Clock.TimeEllapsed());
         if(Clock.TimeEllapsed() >= 5){
 
             int Iterations = (int)(Clock.TimeEllapsed()/5);
@@ -111,6 +112,8 @@ public class OnGameLogic : MonoBehaviour
         EnableStatus();
         SleepState();
         CalculateFrienship();
+        
+        Debug.Log("FR " + StatsMRef.GetFriendship());
     }
 
     //enable/diseable the renderers
@@ -181,7 +184,7 @@ public class OnGameLogic : MonoBehaviour
         float y = 5.5f;
         GameObject Clone = Instantiate(prefab, new Vector3(x, y, -5.0f), Quaternion.identity);
 
-        Clone.transform.eulerAngles = new Vector3(90.0f,180.0f,0.0f);
+        Clone.transform.eulerAngles = new Vector3(-40.0f,270.0f,90.0f);
         Clone.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
     }
 
@@ -238,38 +241,26 @@ public class OnGameLogic : MonoBehaviour
         //Sleep activated
         if (mActive == true){
 
-            if (StatsMRef.Getsleep() == true)
-            {
+            if (Clock.TimeEllapsedGiven(TimeSinceSleepStarted) >= 1){
 
-                if (Clock.TimeEllapsedGiven(TimeSinceSleepStarted) >= 30)
-                {
+                StatsMRef.Setsleep(false);
+                StatsMRef.StoreStatsAppData();
+                LastTimeSinceSleep = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
+                PlayerPrefs.SetString("LastTimeSinceSleep", LastTimeSinceSleep);
+                if (Clock.TimeEllapsedGiven(TimeSinceSleepStarted) > 30){
 
-                    StatsMRef.Setsleep(false);
-                    LastTimeSinceSleep = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
-                    PlayerPrefs.SetString("LastTimeSinceSleep", LastTimeSinceSleep);
-
-                    if (Clock.TimeEllapsedGiven(TimeSinceSleepStarted) > 30){
-
-                        StatsMRef.ChangeFrienship(-10.0f);
-                    }
-                }
-            }
-            else {
-
-                if (Clock.TimeEllapsedGiven(TimeSinceSleepStarted) >= 30){
-
-                    LastTimeSinceSleep = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
-                    PlayerPrefs.SetString("LastTimeSinceSleep", LastTimeSinceSleep);
                     StatsMRef.ChangeFrienship(-10.0f);
                 }
             }
         }
+        else{
 
-        //more than 6 hours since last sleep, so is sleepy
-        if (Clock.TimeEllapsedGiven(LastTimeSinceSleep) >= 360){
+            //more than 6 hours since last sleep, so is sleepy
+            if (Clock.TimeEllapsedGiven(LastTimeSinceSleep) >= 1){
 
-            StatsMRef.Setsleep(true);
-            StatsMRef.StoreStatsAppData();
+                StatsMRef.Setsleep(true);
+                StatsMRef.StoreStatsAppData();
+            }
         }
     }
 
@@ -290,19 +281,20 @@ public class OnGameLogic : MonoBehaviour
 
         //minute * (Thirsty + Hunger + Sick)/100
         int MinutesEllapsed = (int)(Clock.TimeEllapsedGiven(LastTimeFrienshipReduced));
-        if (MinutesEllapsed >= 0){
+        if (MinutesEllapsed >= 10){
 
             float FrienshipReduced = -(float)(MinutesEllapsed * (StatsMRef.GetThirsty() + StatsMRef.GetHunger() + StatsMRef.GetSick()));
             FrienshipReduced *= 0.01f;
             if (StatsMRef.Getsleep()) {
 
-                FrienshipReduced += 0.5f;
+                FrienshipReduced -= 0.5f;
             }
             StatsMRef.ChangeFrienship(FrienshipReduced);
             LastTimeFrienshipReduced = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
             PlayerPrefs.SetString("FrienshipClock", LastTimeFrienshipReduced);
-            ChangeFrienshipBar();
         }
+        
+        ChangeFrienshipBar();
     }
 
     //Change the frienship bar
@@ -311,7 +303,7 @@ public class OnGameLogic : MonoBehaviour
         //Scale of the frienship bar
         Vector3 SVector = new Vector3(FB.transform.localScale.x, FB.transform.localScale.y, StatsMRef.GetFriendship() * 0.007f);
         //Position of the frienship bar
-        Vector3 PVector = new Vector3(FB.transform.localPosition.x, -(100.0f - StatsMRef.GetFriendship()) * 0.035f, FB.transform.localPosition.z);
+        Vector3 PVector = new Vector3(FB.transform.localPosition.x, (-(100.0f - StatsMRef.GetFriendship()) * 0.035f)+0.47f, FB.transform.localPosition.z);
 
         //Change scale and position to the frienship bar
         FB.transform.localScale = SVector;

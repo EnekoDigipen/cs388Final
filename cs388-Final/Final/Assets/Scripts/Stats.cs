@@ -56,22 +56,32 @@ public class Stats : MonoBehaviour
     //Character was healed
     public void DecreaseSick(){
 
-        if (Sick > 0)
+        if (Sick > 0){
+
+
+            ChangeFrienship(3.0f);
             Sick -= 1;
+        }
     }
 
     //Character was feed
     public void DecreaseHunger(){
 
-        if (Hunger > 0)
+        if (Hunger > 0){
+
+            ChangeFrienship(3.0f);
             Hunger -= 1;
+        }
     }
 
     //Character was given water
     public void DecreaseThirsty(){
 
-        if (Thirsty > 0)
+        if (Thirsty > 0){
+            
+            ChangeFrienship(3.0f);
             Thirsty -= 1;
+        }
     }
 
     //Character gets sick
@@ -80,7 +90,6 @@ public class Stats : MonoBehaviour
         if (Sick < 9) { 
         
             Sick += 1;
-            Friendship += 3.0f;
         }
     }
 
@@ -91,7 +100,6 @@ public class Stats : MonoBehaviour
         if (Hunger < 9) { 
         
             Hunger += 1;
-            Friendship += 3;
         }
     }
 
@@ -102,7 +110,6 @@ public class Stats : MonoBehaviour
         if (Thirsty < 9) { 
 
             Thirsty += 1;
-            Friendship += 3;
         }
 }
 

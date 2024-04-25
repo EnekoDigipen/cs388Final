@@ -10,13 +10,18 @@ public class TimeSystem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //load date
         DateText = PlayerPrefs.GetString("Date", "No Date");
+        
+        //if no date was loaded store current
         if(DateText == "No Date"){
 
             StoreCurrentTime();
+            StoreTimeAppData();
         }
         else{
 
+            //store the date
             int[] ConvertedDate = ConvertStringToDate(DateText);
             for(int i = 0; i < 3; i++){
             
@@ -27,8 +32,6 @@ public class TimeSystem : MonoBehaviour
                 Time[i] = ConvertedDate[i+3];
             }
         }
-        //delete later
-        StoreCurrentTime();
     }
 
     public int[] ConvertStringToDate(string time){
