@@ -11,6 +11,7 @@ public class OnGameLogic : MonoBehaviour
     Stats StatsMRef;
     MoveButtons[] MovingButtons;
     Cure CureOption;
+    Water WaterOption;
     ChangeModel Changer;
     private bool ButtonsActivated = false;
 
@@ -52,6 +53,7 @@ public class OnGameLogic : MonoBehaviour
         Clock = GameObject.FindAnyObjectByType<TimeSystem>();
         MovingButtons = GameObject.FindObjectsOfType<MoveButtons>();
         CureOption = GameObject.FindAnyObjectByType<Cure>();
+        WaterOption = GameObject.FindAnyObjectByType<Water>();
         Changer = GameObject.FindAnyObjectByType<ChangeModel>();
 
         //renderers
@@ -287,6 +289,7 @@ public class OnGameLogic : MonoBehaviour
         //decrease hunger
         StatsMRef.DecreaseThirsty();
         StatsMRef.StoreStatsAppData();
+        WaterOption.TriggerWater();
     }
 
     //give medicine to the character
@@ -328,7 +331,7 @@ public class OnGameLogic : MonoBehaviour
         //Sleep activated
         if (mActive == true){
 
-            if (Clock.TimeEllapsedGiven(TimeSinceSleepStarted) >= 1){
+            if (Clock.TimeEllapsedGiven(TimeSinceSleepStarted) >= 15){
 
                 StatsMRef.Setsleep(false);
                 StatsMRef.StoreStatsAppData();
@@ -343,7 +346,7 @@ public class OnGameLogic : MonoBehaviour
         else{
 
             //more than 6 hours since last sleep, so is sleepy
-            if (Clock.TimeEllapsedGiven(LastTimeSinceSleep) >= 1){
+            if (Clock.TimeEllapsedGiven(LastTimeSinceSleep) >= 360){
 
                 StatsMRef.Setsleep(true);
                 StatsMRef.StoreStatsAppData();
@@ -357,7 +360,6 @@ public class OnGameLogic : MonoBehaviour
         int ValueToStore = 0;
         if (mActive == true)
         {
-
             ValueToStore = 1;
         }
         PlayerPrefs.SetInt("Sleep Mode", ValueToStore);

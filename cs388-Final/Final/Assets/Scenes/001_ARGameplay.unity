@@ -221,9 +221,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   phrases:
-  - Hi there! I'm using Whatsapp!
-  - UwU
-  - 69 >:)
+  - I love you!
+  - Can we play?
+  - You are my best friend!
+  - We will be together forever
+  - You can always count on me
   display_time: 3
 --- !u!114 &226371944
 MonoBehaviour:

@@ -19,25 +19,31 @@ public class ChangeModel : MonoBehaviour
     public void CreateHappy()
     {
         Vector3 pos = MonsterObj.transform.position;
+        Vector3 scale = MonsterObj.transform.localScale;
         Destroy(MonsterObj);
         MonsterObj = Instantiate(Happy);
         MonsterObj.transform.position = pos;
+        MonsterObj.transform.localScale = scale;
     }
 
     public void CreateSad()
     {
         Vector3 pos = MonsterObj.transform.position;
+        Vector3 scale = MonsterObj.transform.localScale;
         Destroy(MonsterObj);
         MonsterObj = Instantiate(Sad);
         MonsterObj.transform.position = pos;
+        MonsterObj.transform.localScale = scale;
     }
 
     public void CreateUgly()
     {
         Vector3 pos = MonsterObj.transform.position;
+        Vector3 scale = MonsterObj.transform.localScale;
         Destroy(MonsterObj);
         MonsterObj = Instantiate(Ugly);
         MonsterObj.transform.position = pos;
+        MonsterObj.transform.localScale = scale;
     }
 
     public string GetState() { return State; }

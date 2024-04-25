@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cure : MonoBehaviour
+public class Water : MonoBehaviour
 {
     private float timer = 0.0f;
     private bool activated = false;
@@ -10,8 +10,7 @@ public class Cure : MonoBehaviour
     void Start()
     {
         GetComponent<Renderer>().enabled = false;
-        var emission = GetComponent<ParticleSystem>().emission; // Stores the module in a local variable
-        emission.enabled = false; // Applies the new value directly to the Particle System
+        
     }
 
     // Update is called once per frame
@@ -24,19 +23,15 @@ public class Cure : MonoBehaviour
             if (seconds >= 5) {
 
                 GetComponent<Renderer>().enabled = false;
-                var emission = GetComponent<ParticleSystem>().emission; // Stores the module in a local variable
-                emission.enabled = false; // Applies the new value directly to the Particle System
                 activated = false;
                 timer = 0.0f;
             }
         }
     }
-
-    public void TriggerCure()
+    
+    public void TriggerWater()
     {
         activated = true;
         GetComponent<Renderer>().enabled = true;
-        var emission = GetComponent<ParticleSystem>().emission; // Stores the module in a local variable
-        emission.enabled = true; // Applies the new value directly to the Particle System
     }
 }

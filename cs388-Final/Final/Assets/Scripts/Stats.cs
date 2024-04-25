@@ -140,7 +140,6 @@ public class Stats : MonoBehaviour
 
         //Get the stored frienship
         Friendship = PlayerPrefs.GetFloat("Frienship", 100.0f);
-
         if (Stats != 0){
             
             //sleep activated
