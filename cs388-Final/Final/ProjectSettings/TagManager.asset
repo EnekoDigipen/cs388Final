@@ -9,7 +9,7 @@ TagManager:
   - Coin
   - Breakable
   - ForceField
-  - heart
+  - Monster
   layers:
   - Default
   - TransparentFX
