@@ -9,6 +9,9 @@ public class OnGameLogic : MonoBehaviour
     TTS_SceneManager SceneMRef;
     TimeSystem Clock;
     Stats StatsMRef;
+    MoveButtons[] MovingButtons;
+    Cure CureOption;
+    private bool ButtonsActivated = false;
 
     //fadeout
     private GameObject FO;
@@ -28,6 +31,15 @@ public class OnGameLogic : MonoBehaviour
     private Renderer Hunger;
     private Renderer Sick;
 
+    private Renderer ThirstyB;
+    private Renderer SleepyB;
+    private Renderer HungerB;
+    private Renderer SickB;
+
+
+    private Renderer Sun;
+    private Renderer Moon;
+
 
     // Start is called before the first frame update
     void Start()
@@ -37,12 +49,24 @@ public class OnGameLogic : MonoBehaviour
         SceneMRef = GameObject.FindAnyObjectByType<TTS_SceneManager>();
         StatsMRef = GameObject.FindAnyObjectByType<Stats>();
         Clock = GameObject.FindAnyObjectByType<TimeSystem>();
-        
+        MovingButtons = GameObject.FindObjectsOfType<MoveButtons>();
+        CureOption = GameObject.FindAnyObjectByType<Cure>();
+
         //renderers
         Thirsty = GameObject.Find("Thirsty").GetComponent<Renderer>();
         Hunger = GameObject.Find("Hunger").GetComponent<Renderer>();
         Sleepy = GameObject.Find("Sleepy").GetComponent<Renderer>();
         Sick = GameObject.Find("Sick").GetComponent<Renderer>();
+
+        ThirstyB = GameObject.Find("ThirstyBocadillo").GetComponent<Renderer>();
+        HungerB = GameObject.Find("HungerBocadillo").GetComponent<Renderer>();
+        SleepyB = GameObject.Find("SleepyBocadillo").GetComponent<Renderer>();
+        SickB = GameObject.Find("SickBocadillo").GetComponent<Renderer>();
+
+        Sun = GameObject.Find("Sun").GetComponent<Renderer>();
+        Moon = GameObject.Find("Moon").GetComponent<Renderer>();
+        Sun.enabled = false;
+        Moon.enabled = false;
 
         //gameobjs
         FB = GameObject.Find("FrienshipBarR");
@@ -81,7 +105,6 @@ public class OnGameLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Clock " + Clock.TimeEllapsed());
         if(Clock.TimeEllapsed() >= 5){
 
             int Iterations = (int)(Clock.TimeEllapsed()/5);
@@ -112,8 +135,6 @@ public class OnGameLogic : MonoBehaviour
         EnableStatus();
         SleepState();
         CalculateFrienship();
-        
-        Debug.Log("FR " + StatsMRef.GetFriendship());
     }
 
     //enable/diseable the renderers
@@ -124,6 +145,7 @@ public class OnGameLogic : MonoBehaviour
             if (Hunger.enabled == false){
 
                 Hunger.enabled = true;
+                HungerB.enabled = true;
             }
         }
         else{
@@ -131,6 +153,7 @@ public class OnGameLogic : MonoBehaviour
             if (Hunger.enabled == true){
 
                 Hunger.enabled = false;
+                HungerB.enabled = false;
             }
         }
         if (StatsMRef.GetThirsty() > 0){
@@ -138,6 +161,7 @@ public class OnGameLogic : MonoBehaviour
             if (Thirsty.enabled == false){
 
                 Thirsty.enabled = true;
+                ThirstyB.enabled = true;
             }
         }
         else{
@@ -145,6 +169,7 @@ public class OnGameLogic : MonoBehaviour
             if (Thirsty.enabled == true){
 
                 Thirsty.enabled = false;
+                ThirstyB.enabled = false;
             }
         }
         if (StatsMRef.Getsleep() == true){
@@ -152,6 +177,7 @@ public class OnGameLogic : MonoBehaviour
             if (Sleepy.enabled == false){
 
                 Sleepy.enabled = true;
+                SleepyB.enabled = true;
             }
         }
         else{
@@ -159,6 +185,7 @@ public class OnGameLogic : MonoBehaviour
             if (Sleepy.enabled == true){
 
                 Sleepy.enabled = false;
+                SleepyB.enabled = false;
             }
         }
         if (StatsMRef.GetSick() > 0){
@@ -166,6 +193,7 @@ public class OnGameLogic : MonoBehaviour
             if (Sick.enabled == false){
 
                 Sick.enabled = true;
+                SickB.enabled = true;
             }
         }
         else{
@@ -173,6 +201,25 @@ public class OnGameLogic : MonoBehaviour
             if (Sick.enabled == true){
 
                 Sick.enabled = false;
+                SickB.enabled = false;
+            }
+        }
+        if (mActive == true)
+        {
+            if (Moon.enabled == false)
+            {
+
+                Moon.enabled = true;
+                Sun.enabled = false;
+            }
+        }
+        else
+        {
+            if (Sun.enabled == false)
+            {
+
+                Moon.enabled = false;
+                Sun.enabled = true;
             }
         }
     }
@@ -191,10 +238,15 @@ public class OnGameLogic : MonoBehaviour
     //(De)Activate lights
     public void TriggerAction1(){
 
+        if (ButtonsActivated == true) {
+
+            TriggerAction5();
+        }
         mActive = !mActive;
         FO.SetActive(mActive);
-        if (mActive == true) { 
-        
+        if (mActive == true)
+        {
+
             TimeSinceSleepStarted = System.DateTime.UtcNow.ToLocalTime().ToString("dd-MM-yyyy HH:mm");
             PlayerPrefs.SetString("TimeSinceSleepStarted", TimeSinceSleepStarted);
         }
@@ -204,6 +256,11 @@ public class OnGameLogic : MonoBehaviour
     //feed the character
     public void TriggerAction2(){
 
+        if (ButtonsActivated == true)
+        {
+
+            TriggerAction5();
+        }
         //if sleeping, return
         if (mActive == true)
             return;
@@ -217,6 +274,11 @@ public class OnGameLogic : MonoBehaviour
     //give water to the character
     public void TriggerAction3()
     {
+        if (ButtonsActivated == true)
+        {
+
+            TriggerAction5();
+        }
         //if sleeping, return
         if (mActive == true)
             return;
@@ -228,14 +290,37 @@ public class OnGameLogic : MonoBehaviour
     //give medicine to the character
     public void TriggerAction4()
     {
+        if (ButtonsActivated == true)
+        {
+
+            TriggerAction5();
+        }
         //if sleeping, return
         if (mActive == true)
             return;
         //decrease sick
         StatsMRef.DecreaseSick();
         StatsMRef.StoreStatsAppData();
+        CureOption.TriggerCure();
     }
 
+    public void TriggerAction5(){
+
+        ButtonsActivated = !ButtonsActivated;
+        for (int i = 0; i < MovingButtons.Length; i++)
+        {
+            MovingButtons[i].MoveButton();
+        }
+    }
+    public void TriggerAction6()
+    {        
+        Application.Quit();
+    }
+
+    public void TriggerAction7()
+    {
+        SceneMRef.LoadNextScene(2);
+    }
     public void SleepState() {
 
         //Sleep activated
@@ -308,10 +393,5 @@ public class OnGameLogic : MonoBehaviour
         //Change scale and position to the frienship bar
         FB.transform.localScale = SVector;
         FB.transform.localPosition = PVector;
-    }
-
-    public void ExitGame()
-    {
-        SceneMRef.LoadNextScene(4);
     }
 }

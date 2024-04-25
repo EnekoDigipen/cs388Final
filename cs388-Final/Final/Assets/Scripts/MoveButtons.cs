@@ -17,6 +17,7 @@ public class MoveButtons : MonoBehaviour
     {
         
         Clock = GameObject.FindAnyObjectByType<TimeSystem>();
+        OriginalPosition = transform.localPosition;
     }
 
     // Update is called once per frame
@@ -24,19 +25,23 @@ public class MoveButtons : MonoBehaviour
     {
         if (move){
 
-            if(Clock.TimeEllapsedGiven(TimeStamp) > delay){
+            if(Clock.TimeEllapsedGiven(TimeStamp) >= delay){
 
                 if(Goback == false && transform.localPosition.y < destination.y){
 
-                    transform.localPosition = new Vector3(transform.localScale.x, transform.localScale.y + 0.1f, transform.localScale.z);
+                    Debug.Log("Moving to: " + destination.y);
+                    Debug.Log("Moving at: " + transform.localPosition.y);
+                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y + 100.0f, transform.localPosition.z);
                 }
-                else if(Goback == true && transform.localPosition.y > destination.y){
+                else if(Goback == true && transform.localPosition.y > OriginalPosition.y){
 
-                    transform.localPosition = new Vector3(transform.localScale.x, transform.localScale.y - 0.1f, transform.localScale.z);
+                    Debug.Log("Moving3");
+                    transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - 100.0f, transform.localPosition.z);
                 }
                 else{
 
                     move = false;
+                    Goback = !Goback;
                 }
             }
         }
